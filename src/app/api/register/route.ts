@@ -2,6 +2,7 @@ import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt'
 
+export const runtime = 'nodejs';
 
 export const POST = async (request: NextRequest) => {
     try {
@@ -27,7 +28,6 @@ export const POST = async (request: NextRequest) => {
                 hashed_password: hashedPassword
             }
         });
-        console.log(newUser)
         return NextResponse.json({ data: newUser, message: "User created successfully", status: 200 })
     } catch (error) {
         console.error(error)

@@ -11,6 +11,8 @@ import { useState } from "react"
 import clsx from "clsx"
 import { usePathname } from "next/navigation"
 import { Loader } from "../shared/Loader"
+import { useToast } from "@/components/ui/use-toast"
+
 
 type AuthFormProps = {
     type: 'login' | 'signup'
@@ -21,18 +23,28 @@ const AuthForm = ({ type }: AuthFormProps) => {
     const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>()
     const [loading, setLoading] = useState(false)
     const pathname = usePathname();
+    const { toast } = useToast()
+
 
     const handleAuthFormSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
             setLoading(true)
 
             if (pathname === '/signup') {
-                await fetch('/api/register', {
+                const request = await fetch('/api/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
+                })
+
+                const response = await request.json();
+
+                toast({
+                    title: response.message,
+                    description: response.status === 200 ? 'Now log into your account' : "Please try again using different email",
+                    variant: response.status === 200 ? 'success' : 'destructive',
                 })
             }
 
