@@ -9,9 +9,10 @@ import { handleAuth } from "@/lib/handleAuth"
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
 import { useState } from "react"
 import clsx from "clsx"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Loader } from "../shared/Loader"
 import { useToast } from "@/components/ui/use-toast"
+import { login } from "@/actions/user.action"
 
 
 type AuthFormProps = {
@@ -24,6 +25,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     const [loading, setLoading] = useState(false)
     const pathname = usePathname();
     const { toast } = useToast()
+    const router = useRouter();
 
 
     const handleAuthFormSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -41,11 +43,18 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
                 const response = await request.json();
 
+                if (response.status === 200) router.push('/login')
+
                 toast({
                     title: response.message,
                     description: response.status === 200 ? 'Now log into your account' : "Please try again using different email",
                     variant: response.status === 200 ? 'success' : 'destructive',
                 })
+            }
+
+            else {
+                const request = await login(data);
+                console.log(request);
             }
 
 
