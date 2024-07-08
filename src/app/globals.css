@@ -74,3 +74,15 @@
       @apply bg-background text-foreground;
     }
   }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background:#131520;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background:#252A41;
+  }
